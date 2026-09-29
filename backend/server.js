@@ -1,11 +1,18 @@
 const express = require('express');
 const cors = require('cors');
-const pool = require('./db');
+const initializeDatabase = require('./config/init-db');
+const authRoutes = require('./routes/auth');
+const doctorRoutes = require('./routes/doctors');
+const appointmentRoutes = require('./routes/appointments');
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+app.use('/auth', authRoutes);
+app.use('/doctors', doctorRoutes);
+app.use('/appointments', appointmentRoutes);
 
 app.get('/', (req, res) => {
     res.json({
@@ -13,23 +20,15 @@ app.get('/', (req, res) => {
     });
 });
 
-app.get('/doctors', async (req, res) => {
-    try {
-        const result = await pool.query(
-            'SELECT * FROM doctors ORDER BY id'
-        );
+const PORT = Number(process.env.PORT || 5001);
 
-        res.json(result.rows);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            error: 'Database error'
+initializeDatabase()
+    .then(() => {
+        app.listen(PORT, () => {
+            console.log(`MedCare API running on port ${PORT}`);
         });
-    }
-});
-
-const PORT = 5000;
-
-app.listen(PORT, () => {
-    console.log(`MedCare API running on port ${PORT}`);
-});
+    })
+    .catch((error) => {
+        console.error('Could not initialize the MedCare database.', error);
+        process.exitCode = 1;
+    });
