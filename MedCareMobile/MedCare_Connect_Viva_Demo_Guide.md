@@ -94,6 +94,8 @@ npm run web
 
 The backend reads its database settings and JWT secret from `backend/.env`. The app creates the `app_users` and `appointments` tables at backend startup; the existing `doctors` table must already be present.
 
+New registrations are always assigned the `patient` role. Accounts have a unique numeric ID and email in `app_users`; the role is also stored there. To promote an account, a trusted database operator can run `UPDATE app_users SET role = 'doctor' WHERE email = 'doctor@example.com';` (or use `admin` instead of `doctor`). Never accept doctor/admin roles from public registration. Roles identify account types, but doctor/admin dashboards and role-specific workflows are not implemented in this version.
+
 ## Architecture
 
 | Layer | Technology | Responsibility |
@@ -147,29 +149,33 @@ After successful registration or login, the API signs a token containing the use
 
 Appointment list and cancellation routes require a valid token. Queries use the authenticated user ID, so a patient can only access or cancel their own appointment.
 
-### 8. How do you prevent two patients from booking the same slot?
+### 8. How do you identify account types?
+
+Each account has a generated numeric ID, unique email, and a role (`patient`, `doctor`, or `admin`) in `app_users`. Public registration always creates a patient. The role is returned by authentication endpoints and shown in the signed-in app; privileged roles must be assigned by a trusted database operator. This version does not yet provide doctor/admin dashboards.
+
+### 9. How do you prevent two patients from booking the same slot?
 
 The database has a partial unique index for confirmed appointments on the doctor, date, and time. The API returns a conflict response if that slot has already been booked.
 
-### 9. Where does the doctor information come from?
+### 10. Where does the doctor information come from?
 
 Doctor profiles are read from the existing PostgreSQL `doctors` table. Search supports a text query and a specialty filter.
 
-### 10. How does the app handle invalid or unavailable input?
+### 11. How does the app handle invalid or unavailable input?
 
 The client validates the date and requires a selected time. The API validates doctor ID, date, time, future availability, and doctor hours, and returns a clear error when a request cannot be accepted.
 
-### 11. How is the session retained after closing the app?
+### 12. How is the session retained after closing the app?
 
 The token is stored in Expo SecureStore on native platforms and browser local storage on web. On launch, the app validates the saved token using `/auth/me` before restoring the account.
 
-### 12. What would you add next?
+### 13. What would you add next?
 
 Possible extensions include doctor/admin accounts, appointment reminders, payment integration, email verification, richer availability management, and automated API/UI tests.
 
 ## Current Scope and Limitations
 
-- This version is a patient-facing application; there is no doctor/admin dashboard.
+- Roles distinguish patient, doctor, and admin accounts, but this version is still patient-facing; there are no doctor/admin dashboards or role-specific workflows.
 - Appointment slots are generated from each doctor’s availability in 30-minute increments. Production scheduling would also need explicit clinic calendars, holidays, and appointment durations.
 - Appointment payments and external notification delivery are not included.
 - The existing database must provide the `doctors` table; this project currently initializes only the account and appointment tables.

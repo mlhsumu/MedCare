@@ -15,6 +15,7 @@ export type User = {
   id: number;
   name: string;
   email: string;
+  role: 'patient' | 'doctor' | 'admin';
 };
 
 export type Appointment = {

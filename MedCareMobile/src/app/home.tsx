@@ -53,7 +53,7 @@ export default function HomeScreen() {
         </View>
 
         <View style={styles.greeting}>
-          <Eyebrow>YOUR CARE, IN ONE PLACE</Eyebrow>
+          <Eyebrow>ACCOUNT TYPE: {user?.role.toUpperCase() ?? 'PATIENT'}</Eyebrow>
           <Text style={styles.greetingTitle}>Good day, {user?.name.split(' ')[0] ?? 'there'}.</Text>
           <Text style={styles.greetingCopy}>How can we help you feel better?</Text>
         </View>
