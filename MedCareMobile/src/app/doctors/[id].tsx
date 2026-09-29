@@ -74,7 +74,10 @@ export default function DoctorDetailsScreen() {
       <View style={styles.footer}>
         <View><Text style={styles.feeLabel}>Consultation</Text><Text style={styles.fee}>৳{doctor.fee}</Text></View>
         <View style={styles.bookButton}>
-          <Button label="Book appointment" onPress={() => router.push(`/booking/${doctor.id}`)} />
+          <Button
+            label="Book appointment"
+            onPress={() => router.push({ pathname: '/booking/[id]', params: { id: String(doctor.id) } })}
+          />
         </View>
       </View>
     </View>

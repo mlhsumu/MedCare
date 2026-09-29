@@ -40,6 +40,8 @@ export default function BookingScreen() {
   tomorrow.setDate(tomorrow.getDate() + 1);
   const [doctor, setDoctor] = useState<Doctor | null>(null);
   const [date, setDate] = useState(tomorrow);
+  const [dateText, setDateText] = useState(formatDate(tomorrow));
+  const [dateInputError, setDateInputError] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -88,7 +90,34 @@ export default function BookingScreen() {
 
   const onDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
     if (Platform.OS === 'android') setShowDatePicker(false);
-    if (event.type !== 'dismissed' && selectedDate) setDate(selectedDate);
+    if (event.type !== 'dismissed' && selectedDate) {
+      setDate(selectedDate);
+      setDateText(formatDate(selectedDate));
+    }
+  };
+
+  const onDateTextChange = (value: string) => {
+    setDateText(value);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+      setDateInputError('Enter the date as YYYY-MM-DD.');
+      return;
+    }
+
+    const parsed = new Date(`${value}T12:00:00`);
+    if (Number.isNaN(parsed.getTime()) || formatDate(parsed) !== value) {
+      setDateInputError('Enter a valid calendar date.');
+      return;
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (parsed < today) {
+      setDateInputError('Choose today or a future date.');
+      return;
+    }
+
+    setDate(parsed);
+    setDateInputError('');
   };
 
   if (loading) return <View style={styles.center}><ActivityIndicator size="large" color={palette.teal} /><Text style={styles.copy}>Loading available visits…</Text></View>;
@@ -115,13 +144,12 @@ export default function BookingScreen() {
         {Platform.OS === 'web' ? (
           <TextInput
             accessibilityLabel="Appointment date"
-            value={formatDate(date)}
-            onChangeText={(value) => {
-              const parsed = new Date(`${value}T12:00:00`);
-              if (/^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(parsed.getTime())) setDate(parsed);
-            }}
+            value={dateText}
+            onChangeText={onDateTextChange}
             style={styles.dateButton}
             placeholder="YYYY-MM-DD"
+            maxLength={10}
+            keyboardType="numbers-and-punctuation"
           />
         ) : (
           <Pressable accessibilityRole="button" onPress={() => setShowDatePicker(true)} style={styles.dateButton}>
@@ -129,6 +157,7 @@ export default function BookingScreen() {
             <Text style={styles.editDate}>Change</Text>
           </Pressable>
         )}
+        {dateInputError ? <Text accessibilityRole="alert" style={styles.error}>{dateInputError}</Text> : null}
         {showDatePicker ? (
           <DateTimePicker value={date} mode="date" minimumDate={new Date()} display={Platform.OS === 'ios' ? 'spinner' : 'default'} onChange={onDateChange} />
         ) : null}
@@ -154,7 +183,7 @@ export default function BookingScreen() {
       </ScrollView>
       <View style={styles.footer}>
         <View><Text style={styles.totalLabel}>Consultation fee</Text><Text style={styles.total}>৳{doctor.fee}</Text></View>
-        <View style={styles.submit}><Button label="Confirm booking" onPress={submit} busy={busy} disabled={!selectedTime} /></View>
+        <View style={styles.submit}><Button label="Confirm booking" onPress={submit} busy={busy} disabled={!selectedTime || Boolean(dateInputError)} /></View>
       </View>
     </View>
   );

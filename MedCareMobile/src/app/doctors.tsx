@@ -101,7 +101,7 @@ export default function DoctorsScreen() {
           <Pressable
             accessibilityRole="button"
             accessibilityLabel={`View ${item.name}, ${item.specialization}`}
-            onPress={() => router.push(`/doctors/${item.id}`)}
+            onPress={() => router.push({ pathname: '/doctors/[id]', params: { id: String(item.id) } })}
             style={({ pressed }) => [styles.doctorRow, pressed && styles.pressed]}
           >
             <DoctorMark name={item.name} size={50} />
