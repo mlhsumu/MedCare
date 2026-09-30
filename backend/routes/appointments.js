@@ -1,3 +1,5 @@
+// Appointment routes for patient booking and cancellation.
+// These endpoints require a valid signed-in user before they can be used.
 const express = require('express');
 const requireAuth = require('../middleware/require-auth');
 const {

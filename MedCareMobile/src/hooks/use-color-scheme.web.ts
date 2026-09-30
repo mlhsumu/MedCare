@@ -1,3 +1,5 @@
+// Web-specific color scheme hook.
+// This keeps static rendering stable by waiting until hydration before returning the browser theme.
 import { useEffect, useState } from 'react';
 import { useColorScheme as useRNColorScheme } from 'react-native';
 

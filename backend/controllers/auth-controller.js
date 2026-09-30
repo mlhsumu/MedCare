@@ -1,3 +1,5 @@
+// Authentication logic for MedCare.
+// This file creates users, verifies passwords, and issues JWT tokens for logged-in patients.
 const bcrypt = require('bcryptjs');
 const pool = require('../db');
 const { createToken } = require('../config/auth');

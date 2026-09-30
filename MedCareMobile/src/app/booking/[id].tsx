@@ -1,3 +1,5 @@
+// This screen lets the patient choose a doctor, date, and time before booking a consultation.
+// It validates the slot and sends the appointment request to the backend.
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';

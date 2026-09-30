@@ -1,3 +1,5 @@
+// Native tab layout for mobile screens.
+// This keeps the app navigation consistent for key sections like home, explore, and doctors.
 import { NativeTabs } from 'expo-router/unstable-native-tabs';
 import { useColorScheme } from 'react-native';
 

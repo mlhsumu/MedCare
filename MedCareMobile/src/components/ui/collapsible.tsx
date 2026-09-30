@@ -1,3 +1,4 @@
+// Simple expandable section used to hide or reveal additional content in the app.
 import { SymbolView } from 'expo-symbols';
 import { PropsWithChildren, useState } from 'react';
 import { Pressable, StyleSheet } from 'react-native';

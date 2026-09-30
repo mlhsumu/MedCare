@@ -1,3 +1,5 @@
+// This file boots the MedCare backend server.
+// It creates the API, attaches all route groups, and initializes the database before starting the app.
 const express = require('express');
 const cors = require('cors');
 const initializeDatabase = require('./config/init-db');

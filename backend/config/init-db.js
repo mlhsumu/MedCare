@@ -1,3 +1,5 @@
+// Creates and updates the database tables required by MedCare.
+// This ensures the app has users, doctors, and appointment records when the backend starts.
 const pool = require('../db');
 
 async function initializeDatabase() {

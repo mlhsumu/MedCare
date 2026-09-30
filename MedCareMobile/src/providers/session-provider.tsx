@@ -1,3 +1,5 @@
+// Session management for MedCare.
+// This provider stores the auth token, restores the session on app start, and exposes sign-in/sign-out helpers.
 import * as SecureStore from 'expo-secure-store';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Platform } from 'react-native';

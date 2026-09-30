@@ -1,3 +1,5 @@
+// Web version of the animated startup icon.
+// It provides the same visual entrance effect without relying on native-only animation logic.
 import { Image } from 'expo-image';
 import { StyleSheet, View } from 'react-native';
 import Animated, { Keyframe, Easing } from 'react-native-reanimated';

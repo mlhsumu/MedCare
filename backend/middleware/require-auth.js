@@ -1,3 +1,5 @@
+// Middleware that protects routes that require a logged-in patient.
+// It reads the bearer token, verifies it, and attaches the authenticated user id to the request.
 const { verifyToken } = require('../config/auth');
 
 function requireAuth(req, res, next) {

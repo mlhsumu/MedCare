@@ -1,3 +1,5 @@
+// Root application layout.
+// This file wires the app navigation and protects screens based on whether the user is logged in.
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 

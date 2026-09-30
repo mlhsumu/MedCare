@@ -1,3 +1,5 @@
+// Shared MedCare API helpers.
+// This file defines the app data models and central request function used by screens and providers.
 import { Platform } from 'react-native';
 
 export type Doctor = {

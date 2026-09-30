@@ -1,3 +1,5 @@
+// Entry screen for MedCare.
+// It redirects the user to either the home page or login page depending on the session state.
 import { useRouter } from 'expo-router';
 import { useEffect } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';

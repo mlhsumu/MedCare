@@ -1,3 +1,5 @@
+// This is the main landing page after login.
+// It shows the account info, doctor search, specialties, and quick access to appointments.
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';

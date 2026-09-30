@@ -1,3 +1,5 @@
+// This screen shows the selected doctor's details and booking entry point.
+// It fetches one doctor record from the API and lets the patient continue to booking.
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';

@@ -1,3 +1,5 @@
+// Shared text component for themed typography.
+// It centralizes the app's text styles and color selection for consistent UI appearance.
 import { Platform, StyleSheet, Text, type TextProps } from 'react-native';
 
 import { Fonts, ThemeColor } from '@/constants/theme';

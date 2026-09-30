@@ -1,3 +1,5 @@
+// Exploration screen for the default app guide.
+// It demonstrates how the app can show documentation and examples while staying consistent with the MedCare style.
 import { Image } from 'expo-image';
 import { SymbolView } from 'expo-symbols';
 import { Platform, Pressable, ScrollView, StyleSheet } from 'react-native';

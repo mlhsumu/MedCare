@@ -1,3 +1,5 @@
+// JWT helpers used to sign and verify the MedCare session token.
+// The token is attached to protected API requests so the server knows which patient is logged in.
 const jwt = require('jsonwebtoken');
 
 const secret = process.env.JWT_SECRET ||

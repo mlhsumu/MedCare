@@ -1,3 +1,5 @@
+// Shared themed container component.
+// It applies the current app color palette to any view that needs light/dark support.
 import { View, type ViewProps } from 'react-native';
 
 import { ThemeColor } from '@/constants/theme';

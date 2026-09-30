@@ -1,3 +1,5 @@
+// This page lists doctors and supports search and filtering by specialty.
+// Patients can browse specialists and open a doctor detail screen from here.
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {

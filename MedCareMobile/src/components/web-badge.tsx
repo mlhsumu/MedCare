@@ -1,3 +1,4 @@
+// Expo version badge used in app UI demos and web previews.
 import { version } from 'expo/package.json';
 import { Image } from 'expo-image';
 import { useColorScheme, StyleSheet } from 'react-native';

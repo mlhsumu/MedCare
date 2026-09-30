@@ -1,3 +1,5 @@
+// Shared MedCare design system components.
+// This file centralizes the app palette, reusable buttons, fields, badges, and bottom navigation.
 import React from 'react';
 import { usePathname, useRouter } from 'expo-router';
 import {

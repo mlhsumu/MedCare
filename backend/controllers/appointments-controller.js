@@ -1,3 +1,5 @@
+// Appointment controller for MedCare.
+// This file loads booked visits, creates new bookings, and cancels confirmed appointments.
 const pool = require('../db');
 
 async function listAppointments(req, res) {

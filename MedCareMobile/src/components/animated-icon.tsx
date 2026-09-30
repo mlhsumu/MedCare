@@ -1,3 +1,5 @@
+// Animated splash and logo helper used during app startup.
+// It controls the startup animation and keeps the visual transition smooth for the app shell.
 import { Image } from 'expo-image';
 import * as SplashScreen from 'expo-splash-screen';
 import { useState } from 'react';

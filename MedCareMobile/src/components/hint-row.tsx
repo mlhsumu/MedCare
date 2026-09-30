@@ -1,3 +1,4 @@
+// Small helper row used to display an instruction and an example snippet in the app.
 import type { ReactNode } from 'react';
 import { View, StyleSheet } from 'react-native';
 

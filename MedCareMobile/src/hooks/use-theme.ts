@@ -1,6 +1,6 @@
 /**
- * Learn more about light and dark modes:
- * https://docs.expo.dev/guides/color-schemes/
+ * Theme helper for MedCare.
+ * It picks the active color palette for the current light/dark mode.
  */
 
 import { Colors } from '@/constants/theme';

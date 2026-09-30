@@ -1,3 +1,5 @@
+// This screen is shown after a booking succeeds.
+// It displays the saved visit details and gives the user quick actions to return to the home page or appointments list.
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';

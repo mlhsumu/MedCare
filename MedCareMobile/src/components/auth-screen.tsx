@@ -1,3 +1,5 @@
+// Shared authentication form for login and registration.
+// It handles the auth form state and calls the session provider to create or restore the user session.
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';

@@ -1,5 +1,7 @@
+// This screen shows a patient's confirmed appointments.
+// It loads the appointment list, shows the booking details, and allows cancellation when needed.
 import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { AppNavigation, DoctorMark, palette } from '@/components/medcare-ui';
 import { Appointment, request } from '@/lib/api';
@@ -30,12 +32,26 @@ export default function AppointmentsScreen() {
 
   const cancelAppointment = async (id: number) => {
     if (!token) return;
-    try {
-      await request(`/appointments/${id}`, { method: 'DELETE' }, token);
-      await loadAppointments();
-    } catch (cancelError) {
-      setError(cancelError instanceof Error ? cancelError.message : 'Could not cancel this appointment.');
-    }
+
+    Alert.alert(
+      'Cancel appointment?',
+      'This will remove the booking and free the slot for other patients.',
+      [
+        { text: 'Keep booking', style: 'cancel' },
+        {
+          text: 'Cancel booking',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await request(`/appointments/${id}`, { method: 'DELETE' }, token);
+              await loadAppointments();
+            } catch (cancelError) {
+              setError(cancelError instanceof Error ? cancelError.message : 'Could not cancel this appointment.');
+            }
+          },
+        },
+      ],
+    );
   };
 
   return (
@@ -83,9 +99,11 @@ export default function AppointmentsScreen() {
                 <View><Text style={styles.detailLabel}>FEE</Text><Text style={styles.detailValue}>৳{item.fee}</Text></View>
               </View>
               {active ? (
-                <Pressable accessibilityRole="button" onPress={() => void cancelAppointment(item.id)} style={styles.cancel}>
-                  <Text style={styles.cancelText}>Cancel appointment</Text>
-                </Pressable>
+                <View style={styles.actionsRow}>
+                  <Pressable accessibilityRole="button" onPress={() => void cancelAppointment(item.id)} style={styles.cancel}>
+                    <Text style={styles.cancelText}>Cancel appointment</Text>
+                  </Pressable>
+                </View>
               ) : null}
             </View>
           );
@@ -107,19 +125,43 @@ const styles = StyleSheet.create({
   emptyTitle: { color: palette.ink, fontFamily: 'serif', fontWeight: '700', fontSize: 21 },
   emptyCopy: { color: palette.muted, textAlign: 'center', lineHeight: 21 },
   retry: { color: palette.teal, fontWeight: '800', padding: 8 },
-  appointment: { marginBottom: 12, padding: 15, borderRadius: 8, borderWidth: 1, borderColor: palette.line, backgroundColor: palette.surface },
+  appointment: {
+    marginBottom: 12,
+    paddingHorizontal: 14,
+    paddingTop: 14,
+    paddingBottom: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: palette.line,
+    backgroundColor: palette.surface,
+  },
   appointmentTop: { flexDirection: 'row', alignItems: 'center', gap: 11 },
   doctorDetails: { flex: 1, minWidth: 0 },
-  doctorName: { color: palette.ink, fontWeight: '800', fontSize: 15 },
-  specialty: { color: palette.teal, fontSize: 12, marginTop: 4 },
-  status: { borderRadius: 4, backgroundColor: palette.mint, paddingHorizontal: 7, paddingVertical: 5 },
-  statusPast: { backgroundColor: palette.paleCoral },
-  statusText: { color: palette.tealDark, fontSize: 9, fontWeight: '800' },
+  doctorName: { color: palette.ink, fontWeight: '800', fontSize: 16 },
+  specialty: { color: palette.teal, fontSize: 12, marginTop: 2 },
+  status: {
+    borderRadius: 5,
+    backgroundColor: 'rgba(123, 179, 164, 0.18)',
+    paddingHorizontal: 8,
+    paddingVertical: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  statusPast: { backgroundColor: 'rgba(214, 110, 95, 0.12)' },
+  statusText: { color: palette.tealDark, fontSize: 9, fontWeight: '800', letterSpacing: 0.7 },
   statusTextPast: { color: palette.coral },
-  divider: { height: 1, backgroundColor: palette.line, marginVertical: 14 },
-  visitDetails: { flexDirection: 'row', justifyContent: 'space-between', gap: 10 },
-  detailLabel: { color: palette.muted, fontSize: 9, fontWeight: '800', letterSpacing: 0.4 },
+  divider: { height: 1, backgroundColor: palette.line, marginTop: 12, marginBottom: 12 },
+  visitDetails: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', gap: 8 },
+  detailLabel: { color: palette.muted, fontSize: 9, fontWeight: '800', letterSpacing: 0.3 },
   detailValue: { color: palette.ink, fontSize: 13, fontWeight: '700', marginTop: 4 },
-  cancel: { alignSelf: 'flex-start', marginTop: 15, paddingVertical: 6 },
+  actionsRow: { marginTop: 14, alignItems: 'flex-end' },
+  cancel: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(214, 110, 95, 0.5)',
+    backgroundColor: 'rgba(214, 110, 95, 0.08)',
+  },
   cancelText: { color: palette.danger, fontSize: 12, fontWeight: '700' },
 });

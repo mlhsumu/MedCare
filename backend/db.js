@@ -1,3 +1,5 @@
+// Shared PostgreSQL connection for the MedCare backend.
+// Every controller uses this connection to read and write patient, doctor, and appointment data.
 const { Pool } = require('pg');
 require('dotenv').config();
 

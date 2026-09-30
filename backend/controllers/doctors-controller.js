@@ -1,3 +1,5 @@
+// Doctor listing logic for MedCare.
+// This endpoint supports search and specialization filters so patients can browse doctors quickly.
 const pool = require('../db');
 
 async function listDoctors(req, res) {

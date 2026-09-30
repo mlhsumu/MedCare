@@ -1,3 +1,4 @@
+// External link wrapper used when a link should open in the browser instead of the app navigation flow.
 import { Href, Link } from 'expo-router';
 import { openBrowserAsync, WebBrowserPresentationStyle } from 'expo-web-browser';
 import { type ComponentProps } from 'react';

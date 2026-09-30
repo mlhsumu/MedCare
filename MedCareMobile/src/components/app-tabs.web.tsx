@@ -1,3 +1,5 @@
+// Web tab version used when the app runs in the browser.
+// It renders the same navigation structure with web-friendly tab components.
 import {
   Tabs,
   TabList,
