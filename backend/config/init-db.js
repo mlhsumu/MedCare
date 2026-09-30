@@ -7,8 +7,29 @@ async function initializeDatabase() {
             name VARCHAR(120) NOT NULL,
             email VARCHAR(255) NOT NULL UNIQUE,
             password_hash TEXT NOT NULL,
+            role VARCHAR(20) NOT NULL DEFAULT 'patient',
             created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
         )
+    `);
+
+    await pool.query(`
+        ALTER TABLE app_users
+        ADD COLUMN IF NOT EXISTS role VARCHAR(20) NOT NULL DEFAULT 'patient'
+    `);
+
+    await pool.query(`
+        DO $$
+        BEGIN
+            IF NOT EXISTS (
+                SELECT 1 FROM pg_constraint
+                WHERE conname = 'app_users_role_check'
+                  AND conrelid = 'app_users'::regclass
+            ) THEN
+                ALTER TABLE app_users
+                ADD CONSTRAINT app_users_role_check
+                CHECK (role IN ('patient', 'doctor', 'admin'));
+            END IF;
+        END $$
     `);
 
     await pool.query(`

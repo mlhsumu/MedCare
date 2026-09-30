@@ -3,7 +3,7 @@ const pool = require('../db');
 const { createToken } = require('../config/auth');
 
 function publicUser(row) {
-    return { id: row.id, name: row.name, email: row.email };
+    return { id: row.id, name: row.name, email: row.email, role: row.role };
 }
 
 async function register(req, res) {
@@ -24,7 +24,7 @@ async function register(req, res) {
     try {
         const passwordHash = await bcrypt.hash(password, 12);
         const result = await pool.query(
-            'INSERT INTO app_users (name, email, password_hash) VALUES ($1, $2, $3) RETURNING id, name, email',
+            'INSERT INTO app_users (name, email, password_hash) VALUES ($1, $2, $3) RETURNING id, name, email, role',
             [name, email, passwordHash],
         );
         const user = publicUser(result.rows[0]);
@@ -48,7 +48,7 @@ async function login(req, res) {
 
     try {
         const result = await pool.query(
-            'SELECT id, name, email, password_hash FROM app_users WHERE email = $1',
+            'SELECT id, name, email, role, password_hash FROM app_users WHERE email = $1',
             [email],
         );
         const row = result.rows[0];
@@ -66,7 +66,7 @@ async function login(req, res) {
 async function me(req, res) {
     try {
         const result = await pool.query(
-            'SELECT id, name, email FROM app_users WHERE id = $1',
+            'SELECT id, name, email, role FROM app_users WHERE id = $1',
             [req.userId],
         );
         if (!result.rows[0]) {
