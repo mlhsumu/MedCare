@@ -1,4 +1,4 @@
-// Entry screen for MedCare.
+// Entry screen for IUSMed.
 // It redirects the user to either the home page or login page depending on the session state.
 import { useRouter } from 'expo-router';
 import { useEffect } from 'react';

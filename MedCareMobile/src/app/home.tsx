@@ -40,7 +40,7 @@ export default function HomeScreen() {
         <View style={styles.topbar}>
           <View style={styles.brandLine}>
             <View style={styles.brandMark}><Text style={styles.plus}>+</Text></View>
-            <Text style={styles.brand}>MEDCARE CONNECT</Text>
+            <Text style={styles.brand}>IUSMED CONNECT</Text>
           </View>
           <Pressable
             accessibilityRole="button"

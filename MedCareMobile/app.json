@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "MedCareMobile",
-    "slug": "MedCareMobile",
+    "name": "IUSMed",
+    "slug": "iusmedmobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "medcaremobile",
+    "scheme": "iusmedmobile",
     "userInterfaceStyle": "automatic",
     "ios": {
       "icon": "./assets/expo.icon"

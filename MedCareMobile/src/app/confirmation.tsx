@@ -31,7 +31,7 @@ export default function ConfirmationScreen() {
     <Page>
       <ScrollView contentContainerStyle={styles.content}>
         <Pressable accessibilityRole="button" onPress={() => router.replace('/home')} style={styles.close}>
-          <Text style={styles.closeText}>MedCare Connect</Text>
+          <Text style={styles.closeText}>IUSMed Connect</Text>
         </Pressable>
         <View style={styles.confirmationMark}><Text style={styles.check}>✓</Text></View>
         <Eyebrow>APPOINTMENT CONFIRMED</Eyebrow>
@@ -40,7 +40,7 @@ export default function ConfirmationScreen() {
 
         <View style={styles.visit}>
           <View style={styles.visitHeader}>
-            <DoctorMark name={doctorName || 'MedCare'} size={54} />
+            <DoctorMark name={doctorName || 'IUSMed'} size={54} />
             <View style={styles.doctorInfo}>
               <Text style={styles.doctorName}>{doctorName || 'Your doctor'}</Text>
               <Text style={styles.specialty}>{firstParam(params.specialization)}</Text>

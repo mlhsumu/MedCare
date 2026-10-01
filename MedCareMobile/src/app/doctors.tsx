@@ -54,7 +54,7 @@ export default function DoctorsScreen() {
 
   const listHeader = (
     <View style={styles.header}>
-      <Text style={styles.eyebrow}>MEDCARE CONNECT</Text>
+      <Text style={styles.eyebrow}>IUSMED CONNECT</Text>
       <Text style={styles.title}>Find a doctor</Text>
       <Text style={styles.subtitle}>Search trusted specialists and choose the right fit for you.</Text>
       <TextInput

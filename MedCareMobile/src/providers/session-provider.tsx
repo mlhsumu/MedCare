@@ -1,4 +1,4 @@
-// Session management for MedCare.
+// Session management for IUSMed.
 // This provider stores the auth token, restores the session on app start, and exposes sign-in/sign-out helpers.
 import * as SecureStore from 'expo-secure-store';
 import React, { createContext, useContext, useEffect, useState } from 'react';
@@ -6,7 +6,7 @@ import { Platform } from 'react-native';
 
 import { request, User } from '@/lib/api';
 
-const TOKEN_KEY = 'medcare-session-token';
+const TOKEN_KEY = 'iusmed-session-token';
 
 type AuthResponse = { token: string; user: User };
 type SessionContextValue = {

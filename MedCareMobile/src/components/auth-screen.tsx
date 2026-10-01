@@ -40,7 +40,7 @@ export function AuthScreen({ mode }: { mode: 'login' | 'register' }) {
         <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
           <View style={styles.brandRow}>
             <View style={styles.brandMark}><Text style={styles.brandCross}>+</Text></View>
-            <Text style={styles.brand}>MEDCARE CONNECT</Text>
+            <Text style={styles.brand}>IUSMED CONNECT</Text>
           </View>
 
           <View style={styles.hero}>
@@ -61,7 +61,7 @@ export function AuthScreen({ mode }: { mode: 'login' | 'register' }) {
             {error ? <Text accessibilityRole="alert" style={styles.error}>{error}</Text> : null}
             <Button label={isRegister ? 'Create account' : 'Sign in'} onPress={submit} busy={busy} />
             <View style={styles.switchRow}>
-              <Text style={styles.switchText}>{isRegister ? 'Already have an account?' : 'New to MedCare?'}</Text>
+              <Text style={styles.switchText}>{isRegister ? 'Already have an account?' : 'New to IUSMed?'}</Text>
               <Pressable
                 accessibilityRole="link"
                 onPress={() => router.replace(isRegister ? '/login' : '/register')}

@@ -1,4 +1,4 @@
-// Shared MedCare API helpers.
+// Shared IUSMed API helpers.
 // This file defines the app data models and central request function used by screens and providers.
 import { Platform } from 'react-native';
 
@@ -61,7 +61,7 @@ export async function request<T>(
   try {
     response = await fetch(`${API_URL}${path}`, { ...options, headers });
   } catch {
-    throw new ApiError('Could not connect to MedCare. Check that the server is running.', 0);
+    throw new ApiError('Could not connect to IUSMed. Check that the server is running.', 0);
   }
 
   const payload = await response.json().catch(() => null) as unknown;

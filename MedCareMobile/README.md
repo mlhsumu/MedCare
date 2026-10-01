@@ -1,6 +1,6 @@
-# MedCare Connect
+# IUSMed Connect
 
-MedCare Connect is an Expo app for finding doctors, booking visits, and managing appointments. The Express API uses PostgreSQL for doctors, accounts, and bookings.
+IUSMed Connect is an Expo app for finding doctors, booking visits, and managing appointments. The Express API uses PostgreSQL for doctors, accounts, and bookings.
 
 ## Start the API
 
