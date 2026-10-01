@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { Button, Eyebrow, Field, Page, palette } from '@/components/medcare-ui';
+import { BackButton, Button, Eyebrow, Field, Page, palette } from '@/components/medcare-ui';
 import { useSession } from '@/providers/session-provider';
 
 export function AuthScreen({ mode }: { mode: 'login' | 'register' }) {
@@ -38,6 +38,7 @@ export function AuthScreen({ mode }: { mode: 'login' | 'register' }) {
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
         <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
+          {isRegister ? <BackButton fallback="/login" label="Sign in" /> : null}
           <View style={styles.brandRow}>
             <View style={styles.brandMark}><Text style={styles.brandCross}>+</Text></View>
             <Text style={styles.brand}>IUSMED CONNECT</Text>
@@ -84,10 +85,10 @@ const styles = StyleSheet.create({
   brandRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   brandMark: { width: 34, height: 34, borderRadius: 10, backgroundColor: palette.teal, alignItems: 'center', justifyContent: 'center' },
   brandCross: { color: palette.white, fontSize: 27, fontWeight: '500', lineHeight: 30 },
-  brand: { color: palette.ink, fontSize: 12, fontWeight: '800', letterSpacing: 1.1 },
-  hero: { marginTop: 34, padding: 22, minHeight: 194, justifyContent: 'flex-end', backgroundColor: palette.mint, borderRadius: 10, overflow: 'hidden', gap: 9 },
+  brand: { color: palette.ink, fontSize: 12, fontWeight: '800' },
+  hero: { marginTop: 34, padding: 22, minHeight: 194, justifyContent: 'flex-end', backgroundColor: palette.mint, borderRadius: 8, overflow: 'hidden', gap: 9 },
   heroStripe: { position: 'absolute', width: 8, top: 0, bottom: 0, right: 36, backgroundColor: palette.gold },
-  heroTitle: { maxWidth: 330, color: palette.ink, fontFamily: 'serif', fontSize: 32, fontWeight: '700', lineHeight: 37 },
+  heroTitle: { maxWidth: 330, color: palette.ink, fontFamily: 'serif', fontSize: 30, fontWeight: '700', lineHeight: 36 },
   heroCopy: { maxWidth: 320, color: palette.muted, fontSize: 14, lineHeight: 21 },
   form: { marginTop: 27 },
   formTitle: { color: palette.ink, fontFamily: 'serif', fontSize: 25, fontWeight: '700' },

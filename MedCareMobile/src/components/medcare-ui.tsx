@@ -1,7 +1,7 @@
 // Shared MedCare design system components.
 // This file centralizes the app palette, reusable buttons, fields, badges, and bottom navigation.
 import React from 'react';
-import { usePathname, useRouter } from 'expo-router';
+import { usePathname, useRouter, type Href } from 'expo-router';
 import {
   ActivityIndicator,
   Pressable,
@@ -12,21 +12,23 @@ import {
   TextInputProps,
   View,
 } from 'react-native';
+import { COLORS } from '@/constants/theme';
 
 export const palette = {
-  background: '#F4F7F5',
-  surface: '#FFFFFF',
-  ink: '#183B36',
-  muted: '#6A7D78',
-  teal: '#14756D',
-  tealDark: '#105B56',
-  mint: '#DDEFE8',
-  coral: '#C96E52',
-  paleCoral: '#F8E9E2',
-  line: '#DCE6E1',
-  gold: '#E1B45E',
-  white: '#FFFFFF',
-  danger: '#B5473C',
+  background: COLORS.background,
+  surface: COLORS.secondary,
+  ink: COLORS.text,
+  muted: COLORS.subtext,
+  teal: COLORS.primary,
+  tealDark: '#026B78',
+  mint: '#E3F2F4',
+  coral: COLORS.danger,
+  paleCoral: '#FCEBEC',
+  line: COLORS.border,
+  gold: COLORS.warning,
+  white: COLORS.secondary,
+  danger: COLORS.danger,
+  success: COLORS.success,
 };
 
 export function Page({ children }: React.PropsWithChildren) {
@@ -96,6 +98,20 @@ export function PageTitle({ children, subtitle }: React.PropsWithChildren<{ subt
   );
 }
 
+export function BackButton({ fallback, label = 'Back' }: { fallback: Href; label?: string }) {
+  const router = useRouter();
+
+  return (
+    <Pressable
+      accessibilityRole="button"
+      onPress={() => (router.canGoBack() ? router.back() : router.replace(fallback))}
+      style={styles.backButton}
+    >
+      <Text style={styles.backButtonText}>← {label}</Text>
+    </Pressable>
+  );
+}
+
 export function DoctorMark({ name, size = 52 }: { name: string; size?: number }) {
   const initials = name
     .trim()
@@ -145,19 +161,21 @@ export function AppNavigation() {
 
 const styles = StyleSheet.create({
   page: { flex: 1, backgroundColor: palette.background },
+  backButton: { minHeight: 44, alignSelf: 'flex-start', justifyContent: 'center', paddingHorizontal: 8 },
+  backButtonText: { color: palette.teal, fontSize: 15, fontWeight: '700' },
   button: {
-    minHeight: 50,
+    minHeight: 52,
     paddingHorizontal: 18,
-    paddingVertical: 13,
+    paddingVertical: 14,
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
   },
   primaryButton: { backgroundColor: palette.teal },
-  secondaryButton: { backgroundColor: palette.mint },
+  secondaryButton: { backgroundColor: palette.surface, borderWidth: 1, borderColor: palette.line },
   quietButton: { backgroundColor: 'transparent' },
   buttonDimmed: { opacity: 0.68 },
-  buttonText: { color: palette.white, fontSize: 15, fontWeight: '700' },
+  buttonText: { color: palette.white, fontSize: 16, fontWeight: '700' },
   secondaryButtonText: { color: palette.tealDark },
   fieldWrap: { gap: 7, marginBottom: 15 },
   fieldLabel: { color: palette.ink, fontSize: 13, fontWeight: '700' },
@@ -180,10 +198,10 @@ const styles = StyleSheet.create({
   subtitle: { color: palette.muted, fontSize: 15, lineHeight: 22 },
   doctorMark: { alignItems: 'center', justifyContent: 'center', backgroundColor: palette.mint },
   doctorInitials: { color: palette.tealDark, fontWeight: '800' },
-  navigation: { minHeight: 62, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', borderTopWidth: 1, borderTopColor: palette.line, backgroundColor: palette.surface, paddingHorizontal: 12 },
-  navigationItem: { minWidth: 82, alignItems: 'center', justifyContent: 'center', gap: 5, paddingVertical: 8 },
+  navigation: { minHeight: 64, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', borderTopWidth: 1, borderTopColor: palette.line, backgroundColor: palette.surface, paddingHorizontal: 12 },
+  navigationItem: { minWidth: 82, minHeight: 44, alignItems: 'center', justifyContent: 'center', gap: 5, paddingVertical: 8 },
   navigationDot: { width: 5, height: 5, borderRadius: 3, backgroundColor: 'transparent' },
-  navigationDotActive: { backgroundColor: palette.coral },
-  navigationLabel: { color: palette.muted, fontSize: 11, fontWeight: '600' },
+  navigationDotActive: { backgroundColor: palette.teal },
+  navigationLabel: { color: palette.muted, fontSize: 12, fontWeight: '600' },
   navigationLabelActive: { color: palette.ink, fontWeight: '800' },
 });

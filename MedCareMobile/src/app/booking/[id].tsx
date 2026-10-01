@@ -5,7 +5,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
-import { Button, DoctorMark, Eyebrow, palette } from '@/components/medcare-ui';
+import { BackButton, Button, DoctorMark, Eyebrow, palette } from '@/components/medcare-ui';
 import { Doctor, request } from '@/lib/api';
 import { useSession } from '@/providers/session-provider';
 
@@ -122,13 +122,13 @@ export default function BookingScreen() {
     setDateInputError('');
   };
 
-  if (loading) return <View style={styles.center}><ActivityIndicator size="large" color={palette.teal} /><Text style={styles.copy}>Loading available visits…</Text></View>;
-  if (!doctor) return <View style={styles.center}><Text style={styles.copy}>{error || 'Doctor not found.'}</Text></View>;
+  if (loading) return <View style={styles.center}><BackButton fallback={{ pathname: '/doctors/[id]', params: { id: String(id) } }} label="Doctor details" /><ActivityIndicator size="large" color={palette.teal} /><Text style={styles.copy}>Loading available visits…</Text></View>;
+  if (!doctor) return <View style={styles.center}><BackButton fallback={{ pathname: '/doctors/[id]', params: { id: String(id) } }} label="Doctor details" /><Text style={styles.copy}>{error || 'Doctor not found.'}</Text></View>;
 
   return (
     <View style={styles.page}>
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-        <Pressable accessibilityRole="button" onPress={() => router.back()} style={styles.back}><Text style={styles.backText}>←  Doctor details</Text></Pressable>
+        <BackButton fallback={{ pathname: '/doctors/[id]', params: { id: String(id) } }} label="Doctor details" />
         <Eyebrow>BOOK A VISIT</Eyebrow>
         <Text style={styles.title}>Choose a time</Text>
         <Text style={styles.copy}>Select an upcoming date and an available consultation slot.</Text>
@@ -181,6 +181,7 @@ export default function BookingScreen() {
             </Pressable>
           ))}
         </View>
+        {!slots.length ? <Text style={styles.emptySlots}>No appointment times are available for this doctor.</Text> : null}
         {error ? <Text accessibilityRole="alert" style={styles.error}>{error}</Text> : null}
       </ScrollView>
       <View style={styles.footer}>
@@ -194,7 +195,7 @@ export default function BookingScreen() {
 const styles = StyleSheet.create({
   page: { flex: 1, backgroundColor: palette.background },
   content: { width: '100%', maxWidth: 680, alignSelf: 'center', padding: 20, paddingBottom: 30 },
-  back: { alignSelf: 'flex-start', paddingVertical: 8, marginBottom: 17 },
+  back: { alignSelf: 'flex-start', minHeight: 44, justifyContent: 'center', paddingHorizontal: 4, marginBottom: 17 },
   backText: { color: palette.teal, fontWeight: '700', fontSize: 13 },
   title: { color: palette.ink, fontFamily: 'serif', fontWeight: '700', fontSize: 29, marginTop: 6 },
   copy: { color: palette.muted, fontSize: 14, lineHeight: 21, marginTop: 6 },
@@ -208,15 +209,16 @@ const styles = StyleSheet.create({
   dateValue: { color: palette.ink, fontSize: 14, fontWeight: '700' },
   editDate: { color: palette.teal, fontSize: 12, fontWeight: '700' },
   slotHeading: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 24 },
-  hours: { color: palette.muted, fontSize: 11 },
+  hours: { color: palette.muted, fontSize: 12 },
   slots: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 12 },
-  slot: { minWidth: '30%', minHeight: 43, paddingHorizontal: 10, borderRadius: 7, borderWidth: 1, borderColor: palette.line, backgroundColor: palette.surface, alignItems: 'center', justifyContent: 'center' },
+  slot: { minWidth: '30%', minHeight: 48, paddingHorizontal: 10, borderRadius: 8, borderWidth: 1, borderColor: palette.line, backgroundColor: palette.surface, alignItems: 'center', justifyContent: 'center' },
   slotSelected: { backgroundColor: palette.teal, borderColor: palette.teal },
   slotText: { color: palette.ink, fontSize: 12, fontWeight: '700' },
   slotTextSelected: { color: palette.white },
   error: { color: palette.danger, marginTop: 15, lineHeight: 20 },
+  emptySlots: { color: palette.muted, marginTop: 12, lineHeight: 21 },
   footer: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 13, padding: 15, borderTopWidth: 1, borderColor: palette.line, backgroundColor: palette.surface },
-  totalLabel: { color: palette.muted, fontSize: 11 },
+  totalLabel: { color: palette.muted, fontSize: 12 },
   total: { color: palette.ink, fontSize: 17, fontWeight: '800', marginTop: 3 },
   submit: { maxWidth: 220, flex: 1 },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 12, padding: 24, backgroundColor: palette.background },

@@ -1,8 +1,8 @@
 // This is the main landing page after login.
 // It shows the account info, doctor search, specialties, and quick access to appointments.
 import { useRouter } from 'expo-router';
-import React, { useEffect, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { AppNavigation, Button, DoctorMark, Eyebrow, palette } from '@/components/medcare-ui';
 import { Doctor, request } from '@/lib/api';
@@ -12,22 +12,25 @@ export default function HomeScreen() {
   const router = useRouter();
   const { user, token, signOut } = useSession();
   const [doctors, setDoctors] = useState<Doctor[]>([]);
+  const [doctorsLoading, setDoctorsLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [loadError, setLoadError] = useState('');
 
-  useEffect(() => {
-    let active = true;
-    request<Doctor[]>('/doctors')
-      .then((results) => {
-        if (active) setDoctors(results);
-      })
-      .catch((error: unknown) => {
-        if (active) setLoadError(error instanceof Error ? error.message : 'Could not load specialties.');
-      });
-    return () => {
-      active = false;
-    };
+  const loadDoctors = useCallback(async () => {
+    setDoctorsLoading(true);
+    setLoadError('');
+    try {
+      setDoctors(await request<Doctor[]>('/doctors'));
+    } catch (error: unknown) {
+      setLoadError(error instanceof Error ? error.message : 'Could not load specialties.');
+    } finally {
+      setDoctorsLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    void loadDoctors();
+  }, [loadDoctors]);
 
   const specialties = [...new Set(doctors.map((doctor) => doctor.specialization).filter(Boolean))].slice(0, 6);
   const searchDoctors = () => {
@@ -48,7 +51,7 @@ export default function HomeScreen() {
               await signOut();
               router.replace('/login');
             }}
-            hitSlop={10}
+            style={styles.signOutButton}
           >
             <Text style={styles.signOut}>Sign out</Text>
           </Pressable>
@@ -102,7 +105,17 @@ export default function HomeScreen() {
         </View>
 
         {loadError ? (
-          <Text accessibilityRole="alert" style={styles.message}>{loadError}</Text>
+          <View style={styles.stateBlock}>
+            <Text accessibilityRole="alert" style={styles.message}>{loadError}</Text>
+            <Pressable accessibilityRole="button" onPress={() => void loadDoctors()} style={styles.retryButton}>
+              <Text style={styles.viewAll}>Try again</Text>
+            </Pressable>
+          </View>
+        ) : doctorsLoading ? (
+          <View style={styles.stateRow}>
+            <ActivityIndicator color={palette.teal} />
+            <Text style={styles.message}>Loading specialties…</Text>
+          </View>
         ) : specialties.length ? (
           <View style={styles.categoryGrid}>
             {specialties.map((specialty, index) => (
@@ -119,7 +132,7 @@ export default function HomeScreen() {
             ))}
           </View>
         ) : (
-          <Text style={styles.message}>Doctor specialties will appear here once the server is connected.</Text>
+          <Text style={styles.message}>No doctor specialties are available yet.</Text>
         )}
 
         <View style={styles.appointmentBand}>
@@ -147,27 +160,28 @@ const styles = StyleSheet.create({
   page: { flex: 1, backgroundColor: palette.background },
   content: { width: '100%', maxWidth: 720, alignSelf: 'center', paddingHorizontal: 20, paddingTop: 16, paddingBottom: 30 },
   topbar: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 25 },
+  signOutButton: { minHeight: 44, justifyContent: 'center', paddingHorizontal: 8 },
   brandLine: { flexDirection: 'row', alignItems: 'center', gap: 9 },
   brandMark: { width: 30, height: 30, borderRadius: 9, backgroundColor: palette.teal, alignItems: 'center', justifyContent: 'center' },
   plus: { color: palette.white, fontSize: 24, lineHeight: 27 },
-  brand: { color: palette.ink, fontWeight: '800', fontSize: 11, letterSpacing: 1 },
+  brand: { color: palette.ink, fontWeight: '800', fontSize: 12 },
   signOut: { color: palette.muted, fontSize: 13, fontWeight: '600' },
   greeting: { gap: 7, marginBottom: 20 },
   greetingTitle: { color: palette.ink, fontFamily: 'serif', fontWeight: '700', fontSize: 29 },
   greetingCopy: { color: palette.muted, fontSize: 14 },
   searchBar: { flexDirection: 'row', alignItems: 'center', backgroundColor: palette.surface, borderRadius: 8, padding: 5, borderWidth: 1, borderColor: palette.line, marginBottom: 17 },
-  searchInput: { flex: 1, minWidth: 0, height: 44, paddingHorizontal: 11, color: palette.ink, fontSize: 14 },
-  searchButton: { paddingHorizontal: 14, minHeight: 40, borderRadius: 6, backgroundColor: palette.teal, justifyContent: 'center' },
-  searchButtonText: { color: palette.white, fontSize: 13, fontWeight: '700' },
-  hero: { minHeight: 205, backgroundColor: palette.tealDark, borderRadius: 10, padding: 21, flexDirection: 'row', overflow: 'hidden', marginBottom: 26 },
+  searchInput: { flex: 1, minWidth: 0, height: 48, paddingHorizontal: 11, color: palette.ink, fontSize: 14 },
+  searchButton: { paddingHorizontal: 14, minHeight: 44, borderRadius: 8, backgroundColor: palette.teal, justifyContent: 'center' },
+  searchButtonText: { color: palette.white, fontSize: 15, fontWeight: '700' },
+  hero: { minHeight: 205, backgroundColor: palette.tealDark, borderRadius: 8, padding: 21, flexDirection: 'row', overflow: 'hidden', marginBottom: 26 },
   heroCopyBlock: { flex: 1, justifyContent: 'center', zIndex: 1 },
-  heroLabel: { color: '#BFE3D8', fontSize: 10, fontWeight: '800', letterSpacing: 0.8 },
+  heroLabel: { color: '#D8F0F3', fontSize: 12, fontWeight: '800' },
   heroTitle: { maxWidth: 300, marginTop: 9, color: palette.white, fontFamily: 'serif', fontSize: 24, lineHeight: 29, fontWeight: '700' },
-  heroSub: { maxWidth: 280, marginTop: 8, color: '#DBEAE5', fontSize: 12, lineHeight: 18 },
+  heroSub: { maxWidth: 280, marginTop: 8, color: '#E1F2F4', fontSize: 14, lineHeight: 20 },
   heroAction: { alignSelf: 'flex-start', marginTop: 13, paddingVertical: 8 },
-  heroActionText: { color: '#F3C782', fontSize: 13, fontWeight: '800' },
+  heroActionText: { color: palette.gold, fontSize: 15, fontWeight: '800' },
   heroOrbit: { width: 83, alignItems: 'center', justifyContent: 'center' },
-  heroCircle: { width: 67, height: 67, borderRadius: 34, backgroundColor: '#2D8D80', alignItems: 'center', justifyContent: 'center' },
+  heroCircle: { width: 67, height: 67, borderRadius: 34, backgroundColor: '#1593A2', alignItems: 'center', justifyContent: 'center' },
   heroCross: { color: '#D9F1E8', fontSize: 45, lineHeight: 51, fontWeight: '300' },
   heroDot: { position: 'absolute', width: 12, height: 12, right: 3, top: 31, borderRadius: 6, backgroundColor: palette.coral },
   sectionHeading: { flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 13 },
@@ -176,17 +190,20 @@ const styles = StyleSheet.create({
   categoryGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 9 },
   category: { width: '31.5%', minHeight: 91, padding: 12, justifyContent: 'space-between', borderRadius: 8, backgroundColor: palette.surface, borderWidth: 1, borderColor: palette.line },
   categoryTint: { backgroundColor: palette.paleCoral, borderColor: palette.paleCoral },
-  categoryNumber: { color: palette.coral, fontSize: 10, fontWeight: '800' },
+  categoryNumber: { color: palette.coral, fontSize: 12, fontWeight: '800' },
   categoryName: { color: palette.ink, fontSize: 12, lineHeight: 16, fontWeight: '700' },
   categoryArrow: { position: 'absolute', top: 9, right: 10, color: palette.muted, fontSize: 14 },
-  message: { color: palette.muted, paddingVertical: 17, lineHeight: 21 },
+  message: { color: palette.muted, paddingVertical: 17, lineHeight: 21, fontSize: 14 },
+  stateRow: { minHeight: 64, flexDirection: 'row', alignItems: 'center', gap: 10 },
+  stateBlock: { paddingVertical: 8 },
+  retryButton: { alignSelf: 'flex-start', minHeight: 44, justifyContent: 'center', paddingHorizontal: 8 },
   appointmentBand: { flexDirection: 'row', alignItems: 'center', gap: 12, borderTopWidth: 1, borderBottomWidth: 1, borderColor: palette.line, paddingVertical: 16, marginTop: 23 },
-  appointmentIcon: { width: 41, height: 41, borderRadius: 8, backgroundColor: '#F6E9C9', alignItems: 'center', justifyContent: 'center' },
+  appointmentIcon: { width: 41, height: 41, borderRadius: 8, backgroundColor: '#FFF3D1', alignItems: 'center', justifyContent: 'center' },
   calendarGlyph: { color: '#795E28', fontSize: 13, fontWeight: '800' },
   appointmentCopy: { flex: 1 },
   appointmentTitle: { color: palette.ink, fontSize: 14, fontWeight: '800' },
   appointmentText: { color: palette.muted, fontSize: 12, marginTop: 3 },
   arrow: { color: palette.teal, fontSize: 23, paddingHorizontal: 5 },
   footerActions: { gap: 12, marginTop: 17 },
-  connected: { color: palette.muted, textAlign: 'center', fontSize: 11 },
+  connected: { color: palette.muted, textAlign: 'center', fontSize: 12 },
 });

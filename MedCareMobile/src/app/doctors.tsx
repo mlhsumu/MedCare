@@ -13,7 +13,7 @@ import {
   TextInput,
 } from 'react-native';
 
-import { AppNavigation, DoctorMark, palette } from '@/components/medcare-ui';
+import { AppNavigation, BackButton, DoctorMark, palette } from '@/components/medcare-ui';
 import { Doctor, request } from '@/lib/api';
 
 export default function DoctorsScreen() {
@@ -54,6 +54,7 @@ export default function DoctorsScreen() {
 
   const listHeader = (
     <View style={styles.header}>
+      <BackButton fallback="/home" label="Home" />
       <Text style={styles.eyebrow}>IUSMED CONNECT</Text>
       <Text style={styles.title}>Find a doctor</Text>
       <Text style={styles.subtitle}>Search trusted specialists and choose the right fit for you.</Text>
@@ -131,12 +132,12 @@ const styles = StyleSheet.create({
   },
   list: { paddingHorizontal: 18, paddingBottom: 18, flexGrow: 1 },
   header: { paddingTop: 21, paddingBottom: 17 },
-  eyebrow: { color: palette.teal, fontWeight: '800', fontSize: 10, letterSpacing: 1 },
+  eyebrow: { color: palette.teal, fontWeight: '800', fontSize: 12 },
   title: { marginTop: 7, fontSize: 30, fontWeight: '700', fontFamily: 'serif', color: palette.ink },
   subtitle: { marginTop: 5, color: palette.muted, fontSize: 14, lineHeight: 20 },
   search: { marginTop: 17, height: 49, borderRadius: 8, borderWidth: 1, borderColor: palette.line, backgroundColor: palette.surface, paddingHorizontal: 14, color: palette.ink },
   filters: { gap: 8, paddingVertical: 14 },
-  filter: { paddingVertical: 9, paddingHorizontal: 13, borderWidth: 1, borderColor: palette.line, borderRadius: 20, backgroundColor: palette.surface },
+  filter: { minHeight: 44, justifyContent: 'center', paddingVertical: 10, paddingHorizontal: 13, borderWidth: 1, borderColor: palette.line, borderRadius: 20, backgroundColor: palette.surface },
   filterSelected: { backgroundColor: palette.teal, borderColor: palette.teal },
   filterText: { color: palette.muted, fontSize: 12, fontWeight: '600' },
   filterTextSelected: { color: palette.white },
@@ -160,8 +161,8 @@ const styles = StyleSheet.create({
   details: { marginTop: 5, fontSize: 12, color: palette.muted },
   feeWrap: { alignItems: 'flex-end' },
   fee: { color: palette.ink, fontWeight: '800', fontSize: 14 },
-  feeLabel: { color: palette.muted, marginTop: 3, fontSize: 11 },
+  feeLabel: { color: palette.muted, marginTop: 3, fontSize: 12 },
   empty: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 12, paddingVertical: 35 },
   emptyText: { color: palette.muted, textAlign: 'center', lineHeight: 21 },
-  retry: { color: palette.teal, fontWeight: '800', padding: 9 },
+  retry: { color: palette.teal, fontWeight: '800', minHeight: 44, paddingHorizontal: 9, textAlignVertical: 'center' },
 });

@@ -5,6 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 
 import { SessionProvider } from '@/providers/session-provider';
 import { useSession } from '@/providers/session-provider';
+import { COLORS } from '@/constants/theme';
 
 export default function RootLayout() {
   return (
@@ -22,7 +23,7 @@ function RootNavigator() {
     <Stack
       screenOptions={{
         headerShown: false,
-        contentStyle: { backgroundColor: '#F4F7F5' },
+        contentStyle: { backgroundColor: COLORS.background },
         animation: 'slide_from_right',
       }}
     >

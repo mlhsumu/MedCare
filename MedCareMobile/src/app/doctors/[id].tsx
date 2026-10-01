@@ -4,7 +4,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { Button, DoctorMark, Eyebrow, palette } from '@/components/medcare-ui';
+import { BackButton, Button, DoctorMark, Eyebrow, palette } from '@/components/medcare-ui';
 import { Doctor, request } from '@/lib/api';
 
 export default function DoctorDetailsScreen() {
@@ -30,16 +30,15 @@ export default function DoctorDetailsScreen() {
     void loadDoctor();
   }, [id]);
 
-  const goBack = () => router.back();
   if (loading) {
-    return <View style={styles.center}><ActivityIndicator size="large" color={palette.teal} /><Text style={styles.message}>Loading doctor…</Text></View>;
+    return <View style={styles.center}><BackButton fallback="/doctors" label="Doctors" /><ActivityIndicator size="large" color={palette.teal} /><Text style={styles.message}>Loading doctor…</Text></View>;
   }
   if (!doctor) {
     return (
       <View style={styles.center}>
         <Text style={styles.message}>{error || 'Doctor not found.'}</Text>
-        <Pressable onPress={loadDoctor}><Text style={styles.link}>Try again</Text></Pressable>
-        <Pressable onPress={goBack}><Text style={styles.link}>Go back</Text></Pressable>
+        <Pressable style={styles.linkAction} onPress={loadDoctor}><Text style={styles.link}>Try again</Text></Pressable>
+        <BackButton fallback="/doctors" label="Doctors" />
       </View>
     );
   }
@@ -47,9 +46,7 @@ export default function DoctorDetailsScreen() {
   return (
     <View style={styles.page}>
       <ScrollView contentContainerStyle={styles.content}>
-        <Pressable accessibilityRole="button" onPress={goBack} hitSlop={10} style={styles.back}>
-          <Text style={styles.backText}>←  Doctors</Text>
-        </Pressable>
+        <BackButton fallback="/doctors" label="Doctors" />
         <View style={styles.profile}>
           <DoctorMark name={doctor.name} size={82} />
           <Eyebrow>{doctor.specialization}</Eyebrow>
@@ -99,13 +96,14 @@ const styles = StyleSheet.create({
   copy: { color: palette.muted, fontSize: 14, lineHeight: 22, marginTop: 9 },
   details: { flexDirection: 'row', flexWrap: 'wrap', gap: 14, marginTop: 24 },
   detailItem: { flex: 1, minWidth: 145, padding: 15, backgroundColor: palette.mint, borderRadius: 8 },
-  detailLabel: { color: palette.tealDark, fontSize: 9, fontWeight: '800', letterSpacing: 0.5 },
+  detailLabel: { color: palette.tealDark, fontSize: 12, fontWeight: '800' },
   detailValue: { color: palette.ink, fontSize: 16, fontWeight: '700', marginTop: 8 },
   footer: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: 16, borderTopWidth: 1, borderColor: palette.line, backgroundColor: palette.surface },
-  feeLabel: { color: palette.muted, fontSize: 11 },
+  feeLabel: { color: palette.muted, fontSize: 12 },
   fee: { color: palette.ink, fontSize: 17, fontWeight: '800', marginTop: 3 },
   bookButton: { flex: 1, maxWidth: 235 },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 14, backgroundColor: palette.background, padding: 24 },
   message: { color: palette.muted, textAlign: 'center', lineHeight: 21 },
   link: { color: palette.teal, fontWeight: '700', padding: 6 },
+  linkAction: { minHeight: 44, justifyContent: 'center', paddingHorizontal: 8 },
 });

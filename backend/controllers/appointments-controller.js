@@ -8,7 +8,7 @@ async function listAppointments(req, res) {
             `SELECT a.id,
                     to_char(a.appointment_date, 'YYYY-MM-DD') AS appointment_date,
                     to_char(a.appointment_time, 'HH24:MI') AS appointment_time,
-                    a.status,
+                    LOWER(a.status) AS status,
                     d.id AS doctor_id,
                     d.name AS doctor_name,
                     d.specialization,
@@ -90,7 +90,7 @@ async function cancelAppointment(req, res) {
     try {
         const result = await pool.query(
             `UPDATE appointments SET status = 'cancelled'
-             WHERE id = $1 AND patient_id = $2 AND status = 'confirmed'
+             WHERE id = $1 AND patient_id = $2 AND LOWER(status) IN ('confirmed', 'cancelled')
              RETURNING id`,
             [appointmentId, req.userId],
         );

@@ -2,9 +2,9 @@
 // It displays the saved visit details and gives the user quick actions to return to the home page or appointments list.
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { Button, DoctorMark, Eyebrow, Page, palette } from '@/components/medcare-ui';
+import { BackButton, Button, DoctorMark, Eyebrow, Page, palette } from '@/components/medcare-ui';
 
 function firstParam(value?: string | string[]) {
   return Array.isArray(value) ? value[0] : value ?? '';
@@ -30,9 +30,7 @@ export default function ConfirmationScreen() {
   return (
     <Page>
       <ScrollView contentContainerStyle={styles.content}>
-        <Pressable accessibilityRole="button" onPress={() => router.replace('/home')} style={styles.close}>
-          <Text style={styles.closeText}>IUSMed Connect</Text>
-        </Pressable>
+        <BackButton fallback="/home" label="Back" />
         <View style={styles.confirmationMark}><Text style={styles.check}>✓</Text></View>
         <Eyebrow>APPOINTMENT CONFIRMED</Eyebrow>
         <Text style={styles.title}>Your visit is booked.</Text>
@@ -64,11 +62,9 @@ export default function ConfirmationScreen() {
 
 const styles = StyleSheet.create({
   content: { width: '100%', maxWidth: 560, alignSelf: 'center', flexGrow: 1, justifyContent: 'center', padding: 23, paddingTop: 38, paddingBottom: 32 },
-  close: { alignSelf: 'flex-start', marginBottom: 35 },
-  closeText: { color: palette.ink, fontWeight: '800', fontSize: 12, letterSpacing: 0.8 },
   confirmationMark: { width: 58, height: 58, borderRadius: 29, backgroundColor: palette.mint, alignItems: 'center', justifyContent: 'center', marginBottom: 21 },
   check: { color: palette.teal, fontSize: 30, fontWeight: '700' },
-  title: { color: palette.ink, fontFamily: 'serif', fontSize: 31, fontWeight: '700', marginTop: 7 },
+  title: { color: palette.ink, fontFamily: 'serif', fontSize: 30, fontWeight: '700', marginTop: 7 },
   copy: { color: palette.muted, fontSize: 14, lineHeight: 21, marginTop: 9 },
   visit: { marginTop: 25, padding: 17, borderRadius: 8, backgroundColor: palette.surface, borderWidth: 1, borderColor: palette.line },
   visitHeader: { flexDirection: 'row', alignItems: 'center', gap: 12 },
@@ -77,8 +73,8 @@ const styles = StyleSheet.create({
   specialty: { color: palette.teal, fontSize: 12, marginTop: 4 },
   rule: { height: 1, backgroundColor: palette.line, marginVertical: 15 },
   detailRow: { flexDirection: 'row', justifyContent: 'space-between', gap: 12, marginTop: 11 },
-  detailLabel: { color: palette.muted, fontSize: 10, fontWeight: '800' },
+  detailLabel: { color: palette.muted, fontSize: 12, fontWeight: '800' },
   detailValue: { color: palette.ink, fontSize: 13, fontWeight: '700', textAlign: 'right', flexShrink: 1 },
-  reference: { borderTopWidth: 1, borderColor: palette.line, paddingTop: 12, marginTop: 16, color: palette.muted, fontSize: 11 },
+  reference: { borderTopWidth: 1, borderColor: palette.line, paddingTop: 12, marginTop: 16, color: palette.muted, fontSize: 12 },
   actions: { gap: 10, marginTop: 19 },
 });
