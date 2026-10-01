@@ -2,6 +2,7 @@
 // The token is attached to protected API requests so the server knows which patient is logged in.
 const jwt = require('jsonwebtoken');
 
+// This fallback supports local development only; production startup requires a configured secret.
 const secret = process.env.JWT_SECRET ||
     (process.env.NODE_ENV === 'production' ? null : 'medcare-local-development-secret-change-before-deploying');
 

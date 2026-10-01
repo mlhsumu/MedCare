@@ -2,6 +2,7 @@
 // This endpoint supports search and specialization filters so patients can browse doctors quickly.
 const pool = require('../db');
 
+/** GET /doctors: list doctors, optionally filtered by name or specialization. */
 async function listDoctors(req, res) {
     const search = typeof req.query.search === 'string' ? req.query.search.trim() : '';
     const specialization = typeof req.query.specialization === 'string'
@@ -21,6 +22,7 @@ async function listDoctors(req, res) {
 
     try {
         const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
+        // Values remain parameterized; only internally generated placeholder numbers enter the SQL string.
         const result = await pool.query(`SELECT * FROM doctors ${where} ORDER BY id`, values);
         return res.json(result.rows);
     } catch (error) {
@@ -29,6 +31,7 @@ async function listDoctors(req, res) {
     }
 }
 
+/** GET /doctors/:id: fetch one doctor by numeric ID. */
 async function getDoctor(req, res) {
     const doctorId = Number(req.params.id);
     if (!Number.isInteger(doctorId) || doctorId < 1) {

@@ -46,6 +46,7 @@ export class ApiError extends Error {
   }
 }
 
+/** Send a typed API request with an optional bearer token; network and HTTP failures throw ApiError. */
 export async function request<T>(
   path: string,
   options: RequestInit = {},
@@ -53,6 +54,7 @@ export async function request<T>(
 ): Promise<T> {
   const headers = new Headers(options.headers);
   headers.set('Content-Type', 'application/json');
+  // Protected endpoints receive the token from the session provider, never from URL parameters.
   if (token) {
     headers.set('Authorization', `Bearer ${token}`);
   }

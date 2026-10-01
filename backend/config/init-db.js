@@ -46,6 +46,7 @@ async function initializeDatabase() {
         )
     `);
 
+    // Confirmed slots alone are unique, so cancelling a booking makes its slot available again.
     await pool.query(`
         CREATE UNIQUE INDEX IF NOT EXISTS appointments_active_slot_unique
         ON appointments (doctor_id, appointment_date, appointment_time)

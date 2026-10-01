@@ -21,6 +21,7 @@ type SessionContextValue = {
 const SessionContext = createContext<SessionContextValue | null>(null);
 
 async function readToken() {
+  // Native sessions use encrypted SecureStore; web sessions use browser localStorage.
   if (Platform.OS === 'web') {
     return typeof window === 'undefined' ? null : window.localStorage.getItem(TOKEN_KEY);
   }
@@ -56,6 +57,7 @@ export function SessionProvider({ children }: React.PropsWithChildren) {
           setUser(restoredUser);
         }
       } catch {
+        // A rejected/expired token must not be retried on every app launch.
         await storeToken(null);
       } finally {
         if (active) setLoading(false);

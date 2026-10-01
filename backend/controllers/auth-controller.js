@@ -4,10 +4,12 @@ const bcrypt = require('bcryptjs');
 const pool = require('../db');
 const { createToken } = require('../config/auth');
 
+/** Shape account rows for API responses without exposing password hashes. */
 function publicUser(row) {
     return { id: row.id, name: row.name, email: row.email, role: row.role };
 }
 
+/** POST /auth/register: create an account and return its public profile with a session token. */
 async function register(req, res) {
     const name = typeof req.body.name === 'string' ? req.body.name.trim() : '';
     const email = typeof req.body.email === 'string' ? req.body.email.trim().toLowerCase() : '';
@@ -24,6 +26,7 @@ async function register(req, res) {
     }
 
     try {
+        // Persist only a bcrypt hash; plaintext passwords are never stored or returned.
         const passwordHash = await bcrypt.hash(password, 12);
         const result = await pool.query(
             'INSERT INTO app_users (name, email, password_hash) VALUES ($1, $2, $3) RETURNING id, name, email, role',
@@ -40,6 +43,7 @@ async function register(req, res) {
     }
 }
 
+/** POST /auth/login: authenticate credentials without revealing whether an email exists. */
 async function login(req, res) {
     const email = typeof req.body.email === 'string' ? req.body.email.trim().toLowerCase() : '';
     const password = typeof req.body.password === 'string' ? req.body.password : '';
@@ -65,6 +69,7 @@ async function login(req, res) {
     }
 }
 
+/** GET /auth/me: return the account associated with the verified bearer token. */
 async function me(req, res) {
     try {
         const result = await pool.query(

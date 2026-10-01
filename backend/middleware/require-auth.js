@@ -12,6 +12,7 @@ function requireAuth(req, res, next) {
 
     try {
         const payload = verifyToken(token);
+        // Controllers use only the verified subject, never a client-supplied patient ID.
         req.userId = Number(payload.sub);
         if (!Number.isInteger(req.userId)) {
             throw new Error('Invalid user id');

@@ -23,6 +23,7 @@ function minutes(time: string) {
 
 function createSlots(from: string, to: string) {
   const slots: string[] = [];
+  // Keep the UI's 30-minute choices aligned with the appointment scheduling policy.
   const start = Math.ceil(minutes(from.slice(0, 5)) / 30) * 30;
   for (let value = start; value < minutes(to.slice(0, 5)); value += 30) {
     slots.push(`${String(Math.floor(value / 60)).padStart(2, '0')}:${String(value % 60).padStart(2, '0')}`);

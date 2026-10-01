@@ -2,6 +2,7 @@
 // This file loads booked visits, creates new bookings, and cancels confirmed appointments.
 const pool = require('../db');
 
+/** GET /appointments: return the authenticated patient's visits with normalized statuses. */
 async function listAppointments(req, res) {
     try {
         const result = await pool.query(
@@ -26,11 +27,13 @@ async function listAppointments(req, res) {
     }
 }
 
+/** POST /appointments: create a future booking within the doctor's availability. */
 async function bookAppointment(req, res) {
     const doctorId = Number(req.body.doctorId);
     const date = typeof req.body.date === 'string' ? req.body.date : '';
     const time = typeof req.body.time === 'string' ? req.body.time : '';
 
+    // Reject malformed values before asking PostgreSQL to cast them.
     if (!Number.isInteger(doctorId) || doctorId < 1 || !/^\d{4}-\d{2}-\d{2}$/.test(date) || !/^\d{2}:\d{2}$/.test(time)) {
         return res.status(400).json({ error: 'Choose a valid doctor, date, and time.' });
     }
@@ -59,6 +62,7 @@ async function bookAppointment(req, res) {
             return res.status(400).json({ error: 'Choose a future date and time.' });
         }
 
+        // The unique active-slot index is the final guard against concurrent bookings.
         const result = await pool.query(
             `INSERT INTO appointments (patient_id, doctor_id, appointment_date, appointment_time)
              VALUES ($1, $2, $3, $4)
@@ -81,6 +85,7 @@ async function bookAppointment(req, res) {
     }
 }
 
+/** DELETE /appointments/:id: cancel only the owner's booking; repeated requests are safe to retry. */
 async function cancelAppointment(req, res) {
     const appointmentId = Number(req.params.id);
     if (!Number.isInteger(appointmentId) || appointmentId < 1) {
@@ -88,6 +93,7 @@ async function cancelAppointment(req, res) {
     }
 
     try {
+        // LOWER supports legacy rows whose status was stored in uppercase.
         const result = await pool.query(
             `UPDATE appointments SET status = 'cancelled'
              WHERE id = $1 AND patient_id = $2 AND LOWER(status) IN ('confirmed', 'cancelled')
